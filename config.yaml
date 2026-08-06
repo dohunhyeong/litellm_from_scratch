@@ -1,0 +1,10 @@
+model_list:
+  - model_name: fake-gpt # 직접 모델 이름을 지정할 수 있음.
+    litellm_params:
+      model: gpt-4o
+      api_key: "sk-짜가리-api-key"
+      mock_response: "하이하이!!"
+
+general_settings:
+  master_key: sk-1234
+  proxy_batch_write_at: 5  # DB에 기록하는 주기(초). 원래 litellm의 배치 주기는 10초인데, 여기서는 5초로 설정.

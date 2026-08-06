@@ -2,7 +2,7 @@ services:
   litellm:
     image: docker.litellm.ai/berriai/litellm:main-stable
     ports:
-      - "4000:4000"
+      - "4002:4000"
     environment:
       DATABASE_URL: "postgresql://llmproxy:dbpassword9090@db:5432/litellm"
       LITELLM_MASTER_KEY: "sk-1234"
@@ -21,4 +21,4 @@ services:
       POSTGRES_USER: llmproxy
       POSTGRES_PASSWORD: dbpassword9090
     ports:
-      - "5432:5432"
+      - "5434:5432"
