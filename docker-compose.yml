@@ -7,6 +7,7 @@ services:
       DATABASE_URL: "postgresql://llmproxy:dbpassword9090@db:5432/litellm"
       LITELLM_MASTER_KEY: "sk-1234"
       STORE_MODEL_IN_DB: "True"
+      TZ: "Asia/Seoul"   # 컨테이너 로컬 시각(로그 타임스탬프 등)을 KST로
     volumes:
       - ./config.yaml:/app/config.yaml
     command: ["--config=/app/config.yaml", "--port", "4000"]
@@ -20,5 +21,19 @@ services:
       POSTGRES_DB: litellm
       POSTGRES_USER: llmproxy
       POSTGRES_PASSWORD: dbpassword9090
+      TZ: "Asia/Seoul"    # 컨테이너 OS 시각 → 서버 로그 타임스탬프가 KST
+      PGTZ: "Asia/Seoul"  # 컨테이너 안에서 psql로 붙을 때의 클라이언트 기본 타임존
+    # 서버 파라미터를 직접 KST로 고정 (now(), CURRENT_TIMESTAMP, AT TIME ZONE 기준)
+    command:
+      - "postgres"
+      - "-c"
+      - "timezone=Asia/Seoul"
+      - "-c"
+      - "log_timezone=Asia/Seoul"
     ports:
       - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # 컨테이너 재생성 시 데이터 유지
+
+volumes:
+  pgdata:
