@@ -1,6 +1,6 @@
 services:
   litellm:
-    image: docker.litellm.ai/berriai/litellm:main-stable
+    image: docker.litellm.ai/berriai/litellm:v1.91.0
     ports:
       - "4002:4000"
     environment:
@@ -8,6 +8,7 @@ services:
       LITELLM_MASTER_KEY: "sk-1234"
       STORE_MODEL_IN_DB: "True"
       TZ: "Asia/Seoul"   # 컨테이너 로컬 시각(로그 타임스탬프 등)을 KST로
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"  # 환경변수 OPENAI_API_KEY를 그대로 전달
     volumes:
       - ./config.yaml:/app/config.yaml
     command: ["--config=/app/config.yaml", "--port", "4000"]
