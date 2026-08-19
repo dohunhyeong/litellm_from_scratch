@@ -10,9 +10,19 @@ model_list:
       model: openai/gpt-4o-mini
       api_key: os.environ/OPENAI_API_KEY
 
+  - model_name: nh-gpt-oss
+    litellm_params:
+      model: nh-gw/GPT-OSS
+      api_base: http://host.docker.internal:8200
+      api_key: os.environ/NH_INFER_AUTH_KEY
+
 general_settings:
   master_key: sk-1234
   proxy_batch_write_at: 5  # DB에 기록하는 주기(초). 원래 litellm의 배치 주기는 10초인데, 여기서는 5초로 설정.
+  # 파티셔닝 관련 설정
+  use_spend_logs_partitioning: true
+  maximum_spend_logs_retention_period: "365d"
+  maximum_spend_logs_cleanup_cron: "*/1 * * * *" # 검증용 매분. 검증 끝나면 지울 것(기본1일)
 
 litellm_settings:
   # 예산(budget) 리셋 시각의 기준 타임존. budget_duration이 "1d"인 키/팀은
@@ -22,3 +32,8 @@ litellm_settings:
   timezone: "Asia/Seoul"
   # 리셋 "주기"는 전역 설정이 아니라 키/팀 생성 시 budget_duration으로 지정한다.
   #   예) /key/generate {"max_budget": 10, "budget_duration": "1d"} → 매일 KST 00시 리셋
+ 
+  # custom model 등록하는 위치
+  custom_provider_map:
+    - provider: "nh-gw"
+      custom_handler: nh_handler.nh_llm # 파일명.객체명

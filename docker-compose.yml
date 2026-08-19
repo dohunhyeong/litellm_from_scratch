@@ -9,8 +9,13 @@ services:
       STORE_MODEL_IN_DB: "True"
       TZ: "Asia/Seoul"   # 컨테이너 로컬 시각(로그 타임스탬프 등)을 KST로
       OPENAI_API_KEY: "${OPENAI_API_KEY}"  # 환경변수 OPENAI_API_KEY를 그대로 전달
+      # Partition 관련 환경 변수 설정
+      LITELLM_LOG: "INFO" # 없는 경우, cleanup, 파티션 로그가 안 보여서 검즈
+      SPEND_LOG_PARTITION_INTERVAL: "day" # "day" 가 기본값임. week|month 도 가능
+      SPEND_LOG_PARTITION_PRECREATE_AHEAD: "7" # 기본값. 미리 만들 기간 수.
     volumes:
       - ./config.yaml:/app/config.yaml
+      - ./nh_handler.py:/app/nh_handler.py
     command: ["--config=/app/config.yaml", "--port", "4000"]
     depends_on:
       - db
